@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Details - WMS</title>
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <div id="sidebar-container"></div>
+        
+        <div class="main-wrapper">
+            <div id="header-container"></div>
+            
+            <main class="main-content">
+                <!-- Details Section -->
+                <div class="full-width-section">
+                    <div class="card-header">
+                        <h2 id="detail-title" class="card-title">Details</h2>
+                        <div id="detail-id" style="color: #4c6ef5; font-weight: 600;"></div>
+                    </div>
+                    
+                    <div id="details-container" class="datapage-container">
+                        <p>Loading details...</p>
+                    </div>
+                </div>
+                
+                <!-- Related Lists Section - dynamically added -->
+                <div id="related-lists-container"></div>
+            </main>
+        </div>
+    </div>
+    
+    <script src="../../js/main.js"></script>
+    <script>
+        // Get page and ID from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const pageKey = urlParams.get('page');
+        
+        // Make sure we have a valid page
+        if (!pageKey || !WMS_CONFIG[pageKey]) {
+            alert('Invalid page specified');
+            window.location.href = '../../index.html';
+        }
+        
+        const pageConfig = WMS_CONFIG[pageKey];
+        const paramName = pageConfig.detailsParam;
+        const paramValue = urlParams.get(paramName);
+        
+        // Initialize the page
+        document.getElementById('sidebar-container').innerHTML = generateSidebar(pageKey);
+        document.getElementById('header-container').innerHTML = generateHeader(pageConfig.title + ' Details');
+        document.getElementById('detail-title').textContent = pageConfig.title + ' Details';
+        
+        if (paramName && paramValue) {
+            document.getElementById('detail-id').textContent = `${paramName}: ${paramValue}`;
+            
+            // Load details datapage
+            if (pageConfig.datapages.details) {
+                const detailsContainer = document.getElementById('details-container');
+                const detailsScript = document.createElement('script');
+                detailsScript.type = 'text/javascript';
+                detailsScript.src = `https://c2ect483.caspio.com/dp/${pageConfig.datapages.details}/emb?${paramName}=${paramValue}`;
+                detailsContainer.innerHTML = ''; // Clear loading message
+                detailsContainer.appendChild(detailsScript);
+            }
+            
+            // Load related lists
+            if (pageConfig.datapages.relatedLists && pageConfig.datapages.relatedLists.length > 0) {
+                const relatedContainer = document.getElementById('related-lists-container');
+                
+                pageConfig.datapages.relatedLists.forEach((list, index) => {
+                    // Create section for this related list
+                    const section = document.createElement('div');
+                    section.className = 'full-width-section';
+                    section.style.marginTop = '2rem';
+                    
+                    section.innerHTML = `
+                        <div class="card-header">
+                            <h2 class="card-title">${list.title}</h2>
+                        </div>
+                        
+                        <div id="related-list-${index}" class="datapage-container">
+                            <p>Loading ${list.title}...</p>
+                        </div>
+                    `;
+                    
+                    relatedContainer.appendChild(section);
+                    
+                    // Load the datapage
+                    const listParam = list.paramName || paramName;
+                    const listContainer = document.getElementById(`related-list-${index}`);
+                    const listScript = document.createElement('script');
+                    listScript.type = 'text/javascript';
+                    listScript.src = `https://c2ect483.caspio.com/dp/${list.dpid}/emb?${listParam}=${paramValue}`;
+                    listContainer.innerHTML = ''; // Clear loading message
+                    listContainer.appendChild(listScript);
+                });
+            }
+        } else {
+            // Handle case where parameter is missing
+            document.getElementById('details-container').innerHTML = 
+                `<p style="color: #e53e3e;">Error: No ${paramName || 'ID'} provided.</p>`;
+        }
+        
+        // Initialize navigation
+        initializeNavigation();
+    </script>
+</body>
+</html>

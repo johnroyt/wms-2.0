@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WMS</title>
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <div id="sidebar-container"></div>
+        
+        <div class="main-wrapper">
+            <div id="header-container"></div>
+            
+            <main class="main-content">
+                <div class="full-width-section">
+                    <div class="card-header" id="page-header">
+                        <!-- Buttons will be added here dynamically -->
+                    </div>
+                    
+                    <div id="main-datapage-container" class="datapage-container">
+                        <p>Loading data...</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <script src="../../js/main.js"></script>
+    <script>
+        // Get page key from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const pageKey = urlParams.get('page');
+        
+        // Make sure we have a valid page
+        if (!pageKey || !WMS_CONFIG[pageKey]) {
+            alert('Invalid page specified');
+            window.location.href = '../../index.html';
+        }
+        
+        const pageConfig = WMS_CONFIG[pageKey];
+        
+        // Initialize the page
+        document.getElementById('sidebar-container').innerHTML = generateSidebar(pageKey);
+        document.getElementById('header-container').innerHTML = generateHeader(
+            pageConfig.title, 
+            generateHeaderButtons(pageKey)
+        );
+        
+        // Load the main datapage
+        if (pageConfig.datapages.main) {
+            const container = document.getElementById('main-datapage-container');
+            const script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = `https://c2ect483.caspio.com/dp/${pageConfig.datapages.main}/emb`;
+            container.innerHTML = ''; // Clear loading message
+            container.appendChild(script);
+        }
+        
+        // Initialize navigation
+        initializeNavigation();
+        
+        // Initialize modal triggers if needed
+        initializeModalTriggers();
+    </script>
+</body>
+</html>
