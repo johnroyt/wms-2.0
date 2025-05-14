@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,92 +11,25 @@
         <div id="sidebar-container"></div>
         <div class="main-wrapper">
             <div id="header-container"></div>
-            <main class="main-content">
-                <!-- Dashboard Stats -->
-                <div class="dashboard-grid">
-                    <!-- Inventory Snapshot -->
-                    <div class="inventory-card">
-                        <div class="card-header">
-                            <h2 class="card-title">Inventory Snapshot</h2>
-                            <a href="javascript:void(0)" onclick="navigateTo('inventory')" style="color: #4c6ef5; font-size: 0.875rem;">View Details →</a>
-                        </div>
-                        <div class="location-inventory">
-                            <span class="location-name">ROC Main Warehouse</span>
-                            <span class="location-qty">12,450 units</span>
-                        </div>
-                        <div class="location-inventory">
-                            <span class="location-name">Pod - 6 Lane A - Atlanta Clinic</span>
-                            <span class="location-qty">850 units</span>
-                        </div>
-                        <div class="location-inventory">
-                            <span class="location-name">Pod - 4 Lane - Pending Shipment</span>
-                            <span class="location-qty">625 units</span>
-                        </div>
-                        <div class="location-inventory">
-                            <span class="location-name">Sale-for-Sight Pod - Idle</span>
-                            <span class="location-qty">320 units</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Reorder Alerts -->
-                    <div class="alert-card">
-                        <div class="card-header">
-                            <h2 class="card-title">SKUs Below Reorder Point</h2>
-                        </div>
-                        <ul class="alert-list">
-                            <li class="alert-item">
-                                <span>SKU-1234: Sunglasses</span>
-                                <button class="reorder-btn modal-trigger" 
-                                        data-modal-title="Create New Purchase Order" 
-                                        data-modal-key="purchaseOrderCreate">Create PO</button>
-                            </li>
-                            <li class="alert-item">
-                                <span>SKU-5678: OneSight Cases</span>
-                                <button class="reorder-btn modal-trigger" 
-                                        data-modal-title="Create New Purchase Order" 
-                                        data-modal-key="purchaseOrderCreate">Create PO</button>
-                            </li>
-                            <li class="alert-item">
-                                <span>SKU-9012: Eye Drops</span>
-                                <button class="reorder-btn modal-trigger" 
-                                        data-modal-title="Create New Purchase Order" 
-                                        data-modal-key="purchaseOrderCreate">Create PO</button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <!-- Transfer Orders Section -->
-                <div class="full-width-section">
-                    <div class="tabs">
-                        <div class="tab active" onclick="switchTab(event, 'pending-transfers')">Pending Transfers</div>
-                        <div class="tab" onclick="switchTab(event, 'incoming-returns')">Incoming Returns</div>
-                    </div>
-                    
-                    <div id="pending-transfers" class="tab-content active">
-                        <div class="datapage-container">
-                            <!-- Pending Transfers DataPage -->
-                            <p>Pending Transfers DataPage will be embedded here</p>
-                        </div>
-                    </div>
-                    
-                    <div id="incoming-returns" class="tab-content">
-                        <div class="datapage-container">
-                            <!-- Incoming Returns DataPage -->
-                            <p>Incoming Returns DataPage will be embedded here</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Recent Activity -->
-                <div class="full-width-section">
-                    <div class="card-header">
-                        <h2 class="card-title">Recent Clinic Usage</h2>
-                        <button class="create-po-btn modal-trigger" 
-                                style="background: #38a169;"
-                                data-modal-title="Log Clinic Usage" 
-                                data-modal-key="usageCreate">+ Log Usage</button>
-                    </div>
-                    
-                    <div class="datapage-container">
-                        <!-- Cl
+            <main id="main-content" class="main-content">
+                <!-- All content will be dynamically generated -->
+            </main>
+        </div>
+    </div>
+    
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM loaded, initializing page...");
+            
+            // Initialize the page
+            if (typeof initializePage === 'function') {
+                initializePage('dashboard', 'Dashboard');
+                console.log("Page initialization completed");
+            } else {
+                console.error("CRITICAL ERROR: initializePage function not found!");
+            }
+        });
+    </script>
+</body>
+</html>

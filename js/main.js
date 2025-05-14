@@ -12,7 +12,44 @@ const WMS_CONFIG = {
                 { title: "Recent Activity", dpid: "97594000b7fe2efcda5c49a6a3c7" }
             ]
         },
-        buttons: []
+        buttons: [],
+        layout: "dashboard", // Special layout for dashboard
+        dashboardElements: {
+            inventorySnapshot: {
+                title: "Inventory Snapshot",
+                linkText: "View Details →",
+                linkPage: "inventory",
+                items: [
+                    { location: "ROC Main Warehouse", qty: "12,450 units" },
+                    { location: "Pod - 6 Lane A - Atlanta Clinic", qty: "850 units" },
+                    { location: "Pod - 4 Lane - Pending Shipment", qty: "625 units" },
+                    { location: "Sale-for-Sight Pod - Idle", qty: "320 units" }
+                ]
+            },
+            reorderAlerts: {
+                title: "SKUs Below Reorder Point",
+                alertStyle: true,
+                items: [
+                    { sku: "SKU-1234", name: "Sunglasses", action: "purchaseOrderCreate", actionTitle: "Create New Purchase Order", buttonText: "Create PO" },
+                    { sku: "SKU-5678", name: "OneSight Cases", action: "purchaseOrderCreate", actionTitle: "Create New Purchase Order", buttonText: "Create PO" },
+                    { sku: "SKU-9012", name: "Eye Drops", action: "purchaseOrderCreate", actionTitle: "Create New Purchase Order", buttonText: "Create PO" }
+                ]
+            },
+            transferTabs: {
+                title: "Transfers",
+                tabs: [
+                    { id: "pending-transfers", title: "Pending Transfers", content: "Pending Transfers DataPage will be embedded here", active: true },
+                    { id: "incoming-returns", title: "Incoming Returns", content: "Incoming Returns DataPage will be embedded here" }
+                ]
+            },
+            clinicUsage: {
+                title: "Recent Clinic Usage",
+                content: "Recent Clinic Usage DataPage will be embedded here",
+                actions: [
+                    { name: "Log Usage", action: "usageCreate", actionTitle: "Log Clinic Usage", btnClass: "create-po-btn", btnStyle: "background: #38a169;" }
+                ]
+            }
+        }
     },
     "purchase-orders": {
         title: "Purchase Orders",
@@ -23,13 +60,15 @@ const WMS_CONFIG = {
             main: "97594000040b9d986ff44f68974d", // PO list
             details: "97594000e98e324644c14ec3991f", // PO details
             relatedLists: [
-                { title: "Purchase Order Items", dpid: "9759400078819e1302ad47aa9c7f", paramName: "PurchaseOrderID" }
+                { title: "Purchase Order Items", dpid: "9759400078819e1302ad47aa9c7f", paramName: "PurchaseOrderID" },
+                { title: "Purchase Order Itemtese s", dpid: "9759400078819e1302ad47aa9cdd7f", paramName: "PurchaseOrderID" }
             ]
         },
         buttons: [
-            { name: "Purchase Order", dpid: "97594000e5a237cd35884e7997e9", modal: true }
+            { name: "Purchase Order", action: "purchaseOrderCreate", modal: true }
         ],
-        detailsParam: "PurchaseOrderID"
+        detailsParam: "PurchaseOrderID",
+        layout: "list" // Standard list layout
     },
     "orders": {
         title: "Orders & Transfers",
@@ -44,16 +83,11 @@ const WMS_CONFIG = {
             ]
         },
         buttons: [
-            { 
-                name: "Order", 
-                options: [
-                    { label: "Customer Order", value: "customer", dpid: "975940000c138cee4729441Q0a15e" },
-                    { label: "Transfer", value: "transfer", dpid: "975940000c138cee47294410a15e?OrderType=Transfer" }
-                ],
-                modal: true
-            }
+            { name: "Customer Order", action: "customerOrderCreate", modal: true },
+            { name: "Transfer Order", action: "transferOrderCreate", modal: true }
         ],
-        detailsParam: "OrderID"
+        detailsParam: "OrderID",
+        layout: "list" // Standard list layout
     },
     "inventory": {
         title: "Inventory",
@@ -63,7 +97,8 @@ const WMS_CONFIG = {
         datapages: {
             main: "97594000xyz123" // Replace with actual inventory datapage ID
         },
-        buttons: []
+        buttons: [],
+        layout: "list" // Standard list layout
     },
     "shipments": {
         title: "Shipments",
@@ -74,8 +109,9 @@ const WMS_CONFIG = {
             main: "9759400020270d4c4dbb4f508ce2"
         },
         buttons: [
-            { name: "Shipment", dpid: "9759400020270d4c4dbb4f508ce2", modal: true }
-        ]
+            { name: "Shipment", action: "shipmentCreate", modal: true }
+        ],
+        layout: "list" // Standard list layout
     },
     "usage": {
         title: "Usage",
@@ -86,8 +122,9 @@ const WMS_CONFIG = {
             main: "97594000usage_list" // Replace with actual usage list datapage ID
         },
         buttons: [
-            { name: "Usage", dpid: "97594000usage_form", modal: true, btnClass: "create-po-btn", btnStyle: "background: #38a169;" }
-        ]
+            { name: "Usage", action: "usageCreate", modal: true, btnClass: "create-po-btn", btnStyle: "background: #38a169;" }
+        ],
+        layout: "list" // Standard list layout
     },
     "tasks": {
         title: "Warehouse Tasks",
@@ -97,7 +134,8 @@ const WMS_CONFIG = {
         datapages: {
             main: "97594000task_list" // Replace with actual task list datapage ID
         },
-        buttons: []
+        buttons: [],
+        layout: "list" // Standard list layout
     },
     "special-requests": {
         title: "Special Requests",
@@ -108,8 +146,9 @@ const WMS_CONFIG = {
             main: "97594000aaa51875ed3a4123a20d"
         },
         buttons: [
-            { name: "Request", dpid: "97594000aaa51875ed3a4123a20d", modal: true, btnClass: "create-po-btn", btnStyle: "background: #805ad5;" }
-        ]
+            { name: "Request", action: "specialRequestCreate", modal: true, btnClass: "create-po-btn", btnStyle: "background: #805ad5;" }
+        ],
+        layout: "list" // Standard list layout
     },
     "clinics": {
         title: "Clinics & Events",
@@ -119,7 +158,8 @@ const WMS_CONFIG = {
         datapages: {
             main: "975940001893a85070034f04be79"
         },
-        buttons: []
+        buttons: [],
+        layout: "list" // Standard list layout
     }
 };
 
@@ -130,20 +170,8 @@ const CASPIO_DATAPAGES = {
     customerOrderCreate: 'https://c2ect483.caspio.com/dp/975940000c138cee4729441Q0a15e/emb',
     shipmentCreate: 'https://c2ect483.caspio.com/dp/9759400020270d4c4dbb4f508ce2/emb',
     usageCreate: 'https://c2ect483.caspio.com/dp/97594000usage_form/emb',
-    specialRequestCreate: 'https://c2ect483.caspio.com/dp/97594000aaa51875ed3a4123a20d/emb'
-};
-
-// Define standard modal option configurations
-const MODAL_OPTIONS = {
-    orderTypes: {
-        title: 'Order Type',
-        name: 'orderType',
-        items: [
-            { label: 'Transfer', value: 'transfer', dataPageKey: 'transferOrderCreate', formName: 'Transfer' },
-            { label: 'Customer Order', value: 'customer', dataPageKey: 'customerOrderCreate', formName: 'Customer Order' }
-        ]
-    },
-    // Add more option sets as needed
+    specialRequestCreate: 'https://c2ect483.caspio.com/dp/97594000aaa51875ed3a4123a20d/emb',
+    userProfile: 'https://c2ect483.caspio.com/dp/97594000b114afb38f244fcbb64f/emb' // Added user profile datapage
 };
 
 // Tab switching functionality
@@ -163,6 +191,328 @@ function switchTab(event, tabId) {
     // Show selected tab content and mark tab as active
     document.getElementById(tabId).classList.add('active');
     event.currentTarget.classList.add('active');
+}
+
+// Create the main page content based on page type
+function createPageContent(pageKey) {
+    console.log(`Creating content for page: ${pageKey}`);
+    const mainContent = document.getElementById('main-content');
+    if (!mainContent) {
+        console.error("Main content container not found!");
+        return;
+    }
+    
+    const config = WMS_CONFIG[pageKey];
+    
+    // Clear existing content
+    mainContent.innerHTML = '';
+    
+    // Create content based on layout type
+    if (pageKey === 'dashboard') {
+        createDashboardLayout(config);
+    } else {
+        createStandardLayout(pageKey, config);
+    }
+}
+
+// Create standard list layout
+function createStandardLayout(pageKey, config) {
+    const mainContent = document.getElementById('main-content');
+    
+    // Create standard list container
+    const section = document.createElement('div');
+    section.className = 'full-width-section';
+    
+    // Add datapage container
+    const datapageContainer = document.createElement('div');
+    datapageContainer.className = 'datapage-container';
+    
+    // If there's a main datapage defined, load it
+    if (config.datapages && config.datapages.main) {
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = `https://c2ect483.caspio.com/dp/${config.datapages.main}/emb`;
+        datapageContainer.appendChild(script);
+    } else {
+        datapageContainer.innerHTML = '<p>No datapage configured for this section</p>';
+    }
+    
+    section.appendChild(datapageContainer);
+    mainContent.appendChild(section);
+}
+
+// Create dashboard layout with all configured elements
+function createDashboardLayout(config) {
+    if (!config.dashboardElements) {
+        console.error("No dashboard elements configured");
+        return;
+    }
+    
+    const mainContent = document.getElementById('main-content');
+    
+    // Create dashboard grid for inventory and alerts
+    const dashboardGrid = document.createElement('div');
+    dashboardGrid.className = 'dashboard-grid';
+    
+    // Add inventory snapshot if configured
+    if (config.dashboardElements.inventorySnapshot) {
+        dashboardGrid.appendChild(createInventoryCard(config.dashboardElements.inventorySnapshot));
+    }
+    
+    // Add reorder alerts if configured
+    if (config.dashboardElements.reorderAlerts) {
+        dashboardGrid.appendChild(createAlertCard(config.dashboardElements.reorderAlerts));
+    }
+    
+    mainContent.appendChild(dashboardGrid);
+    
+    // Add transfer tabs section if configured
+    if (config.dashboardElements.transferTabs) {
+        mainContent.appendChild(createTabsSection(config.dashboardElements.transferTabs));
+    }
+    
+    // Add clinic usage section if configured
+    if (config.dashboardElements.clinicUsage) {
+        mainContent.appendChild(createClinicUsageSection(config.dashboardElements.clinicUsage));
+    }
+}
+
+// Create inventory card for dashboard
+function createInventoryCard(config) {
+    const card = document.createElement('div');
+    card.className = 'inventory-card';
+    
+    // Create header
+    const header = document.createElement('div');
+    header.className = 'card-header';
+    
+    const title = document.createElement('h2');
+    title.className = 'card-title';
+    title.textContent = config.title;
+    
+    const link = document.createElement('a');
+    link.href = 'javascript:void(0)';
+    link.onclick = function() { navigateTo(config.linkPage); };
+    link.style = 'color: #4c6ef5; font-size: 0.875rem;';
+    link.textContent = config.linkText;
+    
+    header.appendChild(title);
+    header.appendChild(link);
+    card.appendChild(header);
+    
+    // Add inventory items
+    if (config.items && config.items.length > 0) {
+        config.items.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'location-inventory';
+            
+            const locationSpan = document.createElement('span');
+            locationSpan.className = 'location-name';
+            locationSpan.textContent = item.location;
+            
+            const qtySpan = document.createElement('span');
+            qtySpan.className = 'location-qty';
+            qtySpan.textContent = item.qty;
+            
+            div.appendChild(locationSpan);
+            div.appendChild(qtySpan);
+            card.appendChild(div);
+        });
+    }
+    
+    return card;
+}
+
+// Create alert card for dashboard
+function createAlertCard(config) {
+    const card = document.createElement('div');
+    card.className = config.alertStyle ? 'alert-card' : 'card';
+    
+    // Create header
+    const header = document.createElement('div');
+    header.className = 'card-header';
+    
+    const title = document.createElement('h2');
+    title.className = 'card-title';
+    title.textContent = config.title;
+    
+    header.appendChild(title);
+    card.appendChild(header);
+    
+    // Add alert items
+    if (config.items && config.items.length > 0) {
+        const list = document.createElement('ul');
+        list.className = 'alert-list';
+        
+        config.items.forEach(item => {
+            const li = document.createElement('li');
+            li.className = 'alert-item';
+            
+            const span = document.createElement('span');
+            span.textContent = `${item.sku}: ${item.name}`;
+            
+            const button = document.createElement('button');
+            button.className = 'reorder-btn modal-trigger';
+            button.textContent = item.buttonText || 'Create PO';
+            button.setAttribute('data-modal-title', item.actionTitle);
+            button.setAttribute('data-modal-key', item.action);
+            
+            li.appendChild(span);
+            li.appendChild(button);
+            list.appendChild(li);
+        });
+        
+        card.appendChild(list);
+    }
+    
+    return card;
+}
+
+// Create tabs section for dashboard
+function createTabsSection(config) {
+    const section = document.createElement('div');
+    section.className = 'full-width-section';
+    
+    // Create tabs
+    const tabsDiv = document.createElement('div');
+    tabsDiv.className = 'tabs';
+    
+    // Create tab content containers
+    const tabContents = [];
+    
+    if (config.tabs && config.tabs.length > 0) {
+        config.tabs.forEach(tabConfig => {
+            // Create tab
+            const tab = document.createElement('div');
+            tab.className = `tab${tabConfig.active ? ' active' : ''}`;
+            tab.textContent = tabConfig.title;
+            tab.onclick = function(event) { switchTab(event, tabConfig.id); };
+            tabsDiv.appendChild(tab);
+            
+            // Create tab content
+            const tabContent = document.createElement('div');
+            tabContent.id = tabConfig.id;
+            tabContent.className = `tab-content${tabConfig.active ? ' active' : ''}`;
+            
+            const dataDiv = document.createElement('div');
+            dataDiv.className = 'datapage-container';
+            
+            // Add content or datapage
+            if (tabConfig.dpid) {
+                const script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = `https://c2ect483.caspio.com/dp/${tabConfig.dpid}/emb`;
+                dataDiv.appendChild(script);
+            } else {
+                const placeholder = document.createElement('p');
+                placeholder.textContent = tabConfig.content || 'No content configured';
+                dataDiv.appendChild(placeholder);
+            }
+            
+            tabContent.appendChild(dataDiv);
+            tabContents.push(tabContent);
+        });
+    }
+    
+    section.appendChild(tabsDiv);
+    
+    // Add all tab contents
+    tabContents.forEach(content => {
+        section.appendChild(content);
+    });
+    
+    return section;
+}
+
+// Create clinic usage section for dashboard
+function createClinicUsageSection(config) {
+    const section = document.createElement('div');
+    section.className = 'full-width-section';
+    
+    // Create header
+    const header = document.createElement('div');
+    header.className = 'card-header';
+    
+    const title = document.createElement('h2');
+    title.className = 'card-title';
+    title.textContent = config.title;
+    
+    header.appendChild(title);
+    
+    // Add actions if configured
+    if (config.actions && config.actions.length > 0) {
+        const actionsContainer = document.createElement('div');
+        
+        config.actions.forEach(action => {
+            const button = document.createElement('button');
+            button.className = action.btnClass || 'create-po-btn';
+            button.textContent = `+ ${action.name}`;
+            
+            if (action.btnStyle) {
+                button.style = action.btnStyle;
+            }
+            
+            button.classList.add('modal-trigger');
+            button.setAttribute('data-modal-title', action.actionTitle);
+            button.setAttribute('data-modal-key', action.action);
+            
+            actionsContainer.appendChild(button);
+        });
+        
+        header.appendChild(actionsContainer);
+    }
+    
+    section.appendChild(header);
+    
+    // Add datapage container
+    const dataDiv = document.createElement('div');
+    dataDiv.className = 'datapage-container';
+    
+    // Add content or datapage
+    if (config.dpid) {
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = `https://c2ect483.caspio.com/dp/${config.dpid}/emb`;
+        dataDiv.appendChild(script);
+    } else {
+        const placeholder = document.createElement('p');
+        placeholder.textContent = config.content || 'No content configured';
+        dataDiv.appendChild(placeholder);
+    }
+    
+    section.appendChild(dataDiv);
+    
+    return section;
+}
+
+// Helper function to look up a DataPage URL with fallbacks
+function lookupDataPageKey(key) {
+    console.log(`Looking up DataPage key: ${key}`);
+    
+    // First try direct lookup
+    if (CASPIO_DATAPAGES[key]) {
+        console.log(`Direct match found for key: ${key}`);
+        return CASPIO_DATAPAGES[key];
+    }
+    
+    // Try removing prefix (e.g., "purchase-ordersPurchaseOrderCreate" -> "PurchaseOrderCreate")
+    const simplifiedKey = key.replace(/^[a-z-]+(Purchase|Order|Shipment|Usage|Request|Create)/i, '$1');
+    if (CASPIO_DATAPAGES[simplifiedKey]) {
+        console.log(`Simplified match found: ${simplifiedKey}`);
+        return CASPIO_DATAPAGES[simplifiedKey];
+    }
+    
+    // Last attempt - split by capital letters
+    const basePart = key.split(/(?=[A-Z])/)[0].toLowerCase();
+    if (CASPIO_DATAPAGES[basePart]) {
+        console.log(`Base part match found: ${basePart}`);
+        return CASPIO_DATAPAGES[basePart];
+    }
+    
+    // Not found
+    console.error(`No DataPage URL found for key: ${key}`);
+    console.log('Available keys:', Object.keys(CASPIO_DATAPAGES).join(', '));
+    return null;
 }
 
 // Generic modal system
@@ -275,10 +625,11 @@ function loadDataPageIntoModal(dataPageKey, params, container, formName) {
     // Clear the container
     container.innerHTML = '';
     
-    const dataPageUrl = CASPIO_DATAPAGES[dataPageKey];
+    // Try to get the datapage URL using the lookup function
+    const dataPageUrl = lookupDataPageKey(dataPageKey);
 
     if (!dataPageUrl) {
-        container.innerHTML = `<p>Error: DataPage URL for key '${dataPageKey}' not found.</p>`;
+        container.innerHTML = `<p>Error: DataPage URL for key '${dataPageKey}' not found. Check CASPIO_DATAPAGES configuration.</p>`;
         console.error(`DataPage URL for key '${dataPageKey}' not found.`);
         return;
     }
@@ -293,6 +644,8 @@ function loadDataPageIntoModal(dataPageKey, params, container, formName) {
             fullUrl += (dataPageUrl.includes('?') ? '&' : '?') + urlParams.toString();
         }
     }
+
+    console.log(`Loading DataPage: ${fullUrl}`);
 
     // Create the script that will load the Caspio form
     const script = document.createElement('script');
@@ -324,8 +677,11 @@ function closeGenericModal() {
 
 // Data-attribute based modal system
 function initializeModalTriggers() {
+    console.log("Initializing modal triggers");
     // Find all elements with the modal-trigger class
     const modalTriggers = document.querySelectorAll('.modal-trigger');
+    
+    console.log(`Found ${modalTriggers.length} modal triggers`);
     
     // Add click event listener to each trigger
     modalTriggers.forEach(trigger => {
@@ -336,6 +692,8 @@ function initializeModalTriggers() {
                 formName: this.getAttribute('data-modal-form-name'),
                 dataPageKey: this.getAttribute('data-modal-key')
             };
+            
+            console.log(`Modal trigger clicked with key: ${config.dataPageKey}`);
             
             // Check if this modal has options
             if (this.hasAttribute('data-modal-options')) {
@@ -363,6 +721,7 @@ function initializeModalTriggers() {
 
 // Function to generate sidebar HTML from configuration
 function generateSidebar(activePage) {
+    console.log("Generating sidebar for page:", activePage);
     let navSections = {};
     
     // Organize items by section
@@ -410,19 +769,25 @@ function generateSidebar(activePage) {
         sidebarHtml += `</nav>`;
     });
     
-    // Add user profile section
-    sidebarHtml += `
-            <div class="user-profile">
-                <div class="user-avatar">JD</div>
-                <div class="user-info">
-                    <div class="user-name">John Doe</div>
-                    <div class="user-role">Warehouse Manager</div>
-                </div>
-            </div>
-        </aside>
-    `;
+
     
     return sidebarHtml;
+}
+
+// Function to load the user profile
+function loadUserProfile() {
+    console.log("Loading user profile");
+    const profileContainer = document.getElementById('user-profile-container');
+    if (profileContainer) {
+        // Create script element properly to ensure execution
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = 'https://c2ect483.caspio.com/dp/97594000b114afb38f244fcbb64f/emb';
+        profileContainer.appendChild(script);
+        console.log("User profile script added");
+    } else {
+        console.error("User profile container not found!");
+    }
 }
 
 // Function to generate header buttons from configuration
@@ -437,14 +802,19 @@ function generateHeaderButtons(pageKey) {
         let btnClass = button.btnClass || 'create-po-btn';
         let btnStyle = button.btnStyle || '';
         
+        // Use buttonText property if provided, no automatic prefix
+        const buttonText = button.buttonText || button.name;
+        // Use modalTitle if provided
+        const modalTitle = button.modalTitle || `Create New ${button.name}`;
+        
         if (button.options) {
             // Button with multiple options (modal with choices)
             buttonsHtml += `
                 <button class="${btnClass} modal-trigger" 
                         style="${btnStyle}" 
-                        data-modal-title="Create New ${button.name}"
+                        data-modal-title="${modalTitle}"
                         data-modal-options="${pageKey}-options">
-                    + Create ${button.name}
+                    ${buttonText}
                 </button>
             `;
             
@@ -462,14 +832,16 @@ function generateHeaderButtons(pageKey) {
                 };
             }
         } else if (button.modal) {
-            // Simple modal button
+            // Simple modal button - use the action property if available
+            const dataPageKey = button.action || `${pageKey}${button.name.replace(/\s+/g, '')}Create`;
+            
             buttonsHtml += `
                 <button class="${btnClass} modal-trigger" 
                         style="${btnStyle}" 
-                        data-modal-title="Create New ${button.name}" 
-                        data-modal-key="${pageKey}${button.name.replace(/\s+/g, '')}Create"
+                        data-modal-title="${modalTitle}" 
+                        data-modal-key="${dataPageKey}"
                         data-modal-form-name="${button.name}">
-                    + Create ${button.name}
+                    ${buttonText}
                 </button>
             `;
         } else {
@@ -478,7 +850,7 @@ function generateHeaderButtons(pageKey) {
                 <button class="${btnClass}" 
                         style="${btnStyle}"
                         onclick="navigateTo('${pageKey}/${button.action || 'create'}')">
-                    + Create ${button.name}
+                    ${buttonText}
                 </button>
             `;
         }
@@ -505,8 +877,15 @@ function generateHeader(pageTitle, additionalButtons = '') {
     `;
 }
 
-// Updated navigateTo function
+// Create details link utility function
+function createDetailsLink(pageKey, paramName, paramValue) {
+    return `pages/generic/details.html?page=${pageKey}&${paramName}=${encodeURIComponent(paramValue)}`;
+}
+
+// Updated navigateTo function with improved parameter handling
 function navigateTo(pagePath) {
+    console.log(`Navigating to: ${pagePath}`);
+    
     // Split into page and subpath if applicable
     const parts = pagePath.split('/');
     const pageKey = parts[0];
@@ -522,8 +901,16 @@ function navigateTo(pagePath) {
     let relativePath;
     
     if (subPath === 'details' && WMS_CONFIG[pageKey].datapages.details) {
-        // This is a details page
+        // This is a details page - Note use of ? for query parameter
         relativePath = `pages/generic/details.html?page=${pageKey}`;
+        
+        // If there's an ID parameter in the current URL, add it to the new URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const idParam = WMS_CONFIG[pageKey].detailsParam;
+        const idValue = urlParams.get(idParam);
+        if (idValue) {
+            relativePath += `&${idParam}=${encodeURIComponent(idValue)}`;
+        }
     } else if (subPath === 'create') {
         // This is a create page
         relativePath = `pages/generic/form.html?page=${pageKey}&form=create`;
@@ -557,6 +944,7 @@ function navigateTo(pagePath) {
     
     // Construct the full URL
     const newUrl = baseUrl + repoPath + '/' + relativePath;
+    console.log(`Navigating to URL: ${newUrl}`);
     
     // Navigate to the new URL
     window.location.href = newUrl;
@@ -564,6 +952,7 @@ function navigateTo(pagePath) {
 
 // Initialize navigation
 function initializeNavigation() {
+    console.log("Initializing navigation");
     document.addEventListener('click', function(e) {
         const navItem = e.target.closest('.nav-item');
         
@@ -599,6 +988,8 @@ window.addEventListener('click', function(event) {
  * @param {string} additionalButtons - Optional HTML for additional header buttons
  */
 function initializePage(activePage, pageTitle = null, additionalButtons = null) {
+    console.log(`Initializing page: ${activePage}`);
+    
     // Make sure we have a valid page config
     if (!WMS_CONFIG[activePage]) {
         console.error(`No configuration for page: ${activePage}`);
@@ -609,7 +1000,16 @@ function initializePage(activePage, pageTitle = null, additionalButtons = null) 
     const pageConfig = WMS_CONFIG[activePage];
     
     // Generate sidebar and header
-    document.getElementById('sidebar-container').innerHTML = generateSidebar(activePage);
+    const sidebarContainer = document.getElementById('sidebar-container');
+    if (sidebarContainer) {
+        sidebarContainer.innerHTML = generateSidebar(activePage);
+        console.log("Sidebar generated");
+        
+        // Load the user profile
+        loadUserProfile();
+    } else {
+        console.error("Sidebar container not found!");
+    }
     
     // Use explicit title if provided, otherwise use from config
     const title = pageTitle || pageConfig.title;
@@ -617,7 +1017,16 @@ function initializePage(activePage, pageTitle = null, additionalButtons = null) 
     // Use explicit buttons if provided, otherwise generate from config
     const buttons = (additionalButtons !== null) ? additionalButtons : generateHeaderButtons(activePage);
     
-    document.getElementById('header-container').innerHTML = generateHeader(title, buttons);
+    const headerContainer = document.getElementById('header-container');
+    if (headerContainer) {
+        headerContainer.innerHTML = generateHeader(title, buttons);
+        console.log("Header generated");
+    } else {
+        console.error("Header container not found!");
+    }
+    
+    // Create the main content based on page type
+    createPageContent(activePage);
     
     // Set up navigation event listeners
     initializeNavigation();
@@ -625,5 +1034,8 @@ function initializePage(activePage, pageTitle = null, additionalButtons = null) 
     // Initialize modal triggers
     initializeModalTriggers();
     
-    console.log(`Page initialized: ${activePage}`);
+    console.log(`Page initialization completed: ${activePage}`);
 }
+
+// Initialize MODAL_OPTIONS object if not already defined
+const MODAL_OPTIONS = MODAL_OPTIONS || {};
